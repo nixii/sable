@@ -28,6 +28,7 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 }
 
 // Tokenize a number
+#[allow(unused_variables)]
 fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Result<Token, IllegalCharError> {
     Err(IllegalCharError(c))
 }
@@ -57,9 +58,16 @@ pub fn tokenize(text: String) -> Result<Vec<Token>, impl Display + Debug> {
             // Create the token and push it
             let tok = tokenize_number(&mut chars, c)?;
             tokens.push(tok);
+        
+        // Nothing happens on whitespace
+        } else if c.is_whitespace() {
+
+        // If it's a completely unexpected character
+        } else {
+            return Err(IllegalCharError(c));
         }
     }
 
     // Return the tokens
-    Ok::<Vec<Token>, IllegalCharError>(tokens)
+    Ok::<Vec<Token>, _>(tokens)
 }
