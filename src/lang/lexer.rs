@@ -2,7 +2,7 @@
 use std::collections::VecDeque;
 
 // All imported modules
-use super::token::Token;
+use super::{consts, token::Token};
 
 // Tokenize an identifier
 fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
@@ -20,7 +20,16 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
     token_data.extend(alphanumeric_chars);
 
     // Return the token
-    Token::Identifier(token_data)
+    if consts::KEYWORDS.contains(&token_data.as_str()) {
+        Token::Keyword(token_data)
+    } else {
+        Token::Identifier(token_data)
+    }
+}
+
+// Tokenize a number
+fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Token {
+    todo!()
 }
 
 // Tokenize a string
@@ -44,29 +53,10 @@ pub fn tokenize(text: String) -> Vec<Token> {
 
         // If the character is a digit
         } else if c.is_digit(10) {
-            let mut num_str = String::from(c);
-            let mut dot = false;
             
-            loop {
-                let c2 = chars.pop_front();
-                match c2 {
-                    Some(x) => {
-                        if x.is_digit(10) || x == '.' {
-                            if x == '.' {
-                                dot = true;
-                            }
-                            num_str.push(x);
-                        } else {
-                            break;
-                        }
-                    },
-                    None => break
-                }
-            }
-
-            if dot {
-                
-            }
+            // Create the token and push it
+            let tok = tokenize_number(&mut chars, c);
+            tokens.push(tok);
         }
     }
 
