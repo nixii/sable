@@ -1,0 +1,35 @@
+
+// All code is ran in a main function. This function is void and takes no parameters.
+fun main() {
+    println("Hello, world!") // Note the absence of a semicolon.
+}
+
+// You can define variables inside of functions with the "let" keyword.
+fun test() {
+    let x = 10 // The type is automatically inferred.
+    let y (int) = 20 // The type is explicitly typed here.
+}
+
+// You can define a return type of a function with the returns keyword.
+fun get_ten() returns int {
+    return 10
+}
+
+// You can add parameters to a function like you define variables.
+// You do NOT use a comma to seperate these.
+fun add( a (int) b (int) ) returns int {
+    return a + b
+}
+let three = add(1 2)
+
+// In the global scope, you cannot define variables. You can, however, define constants.
+// Constants use the "const" keyword. You don't have to specify their type.
+const pi (float) = 3.14
+
+// These types we've used are actually just aliases. They each encapsulate the 32-bit
+// version if their respective type.
+// int is an int32, and float is a float64. Floats can be 32, 64, or 128-bits. Ints can be 8,
+// 16, 32, 64, or 128 bits. uint is the same as an integer but it's unsigned.
+// You can define your own type aliases with this syntax:
+const double (type) = float64
+const pi (double) = 3.14159
