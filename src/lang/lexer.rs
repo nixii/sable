@@ -11,19 +11,6 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 
     // Loop through characters until the identifier can't be continued
     // Would be cleaner but you can't use a while let in a while let
-    // loop {
-    //     let c2 = chars.pop_front();
-    //     match c2 {
-    //         Some(x) => {
-    //             if x.is_alphanumeric() {
-    //                 token_data.push(x);
-    //             } else {
-    //                 break;
-    //             }
-    //         },
-    //         None => break
-    //     }
-    // }
     let alphanumeric_chars: VecDeque<_> = chars.iter()
         .take_while(|c| c.is_alphanumeric())
         .cloned()
