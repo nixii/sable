@@ -14,15 +14,14 @@ pub enum Token {
     LeftParen,
     RightParen,
 
-    DoubleQuote,
-    SingleQuote,
-
     // Random data stuff
     Newline,
     Semicolon,
 
-    // Number types (Whooo a lot)
+    // Various types (Whooo a lot)
     Integer(i32),
     UInteger(u32),
     Float(f32),
+    String(String),
+    Boolean(bool)
 }
