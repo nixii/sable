@@ -1,8 +1,8 @@
 
-use std::collections::VecDeque;
+use std::{collections::VecDeque, fmt::{Debug, Display}};
 
 // All imported modules
-use super::{consts, token::Token};
+use super::{consts, errors::illegal_char_error::IllegalCharError, token::Token};
 
 // Tokenize an identifier
 fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
@@ -28,12 +28,12 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 }
 
 // Tokenize a number
-fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Token {
-    todo!()
+fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Result<Token, IllegalCharError> {
+    Err(IllegalCharError(c))
 }
 
 // Tokenize a string
-pub fn tokenize(text: String) -> Vec<Token> {
+pub fn tokenize(text: String) -> Result<Vec<Token>, impl Display + Debug> {
 
     // Return tokens
     let mut tokens: Vec<Token> = Vec::new();
@@ -55,11 +55,11 @@ pub fn tokenize(text: String) -> Vec<Token> {
         } else if c.is_digit(10) {
             
             // Create the token and push it
-            let tok = tokenize_number(&mut chars, c);
+            let tok = tokenize_number(&mut chars, c)?;
             tokens.push(tok);
         }
     }
 
     // Return the tokens
-    tokens
+    Ok::<Vec<Token>, IllegalCharError>(tokens)
 }
