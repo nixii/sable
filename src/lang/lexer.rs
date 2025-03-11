@@ -11,13 +11,21 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 
     // Loop through characters until the identifier can't be continued
     // Would be cleaner but you can't use a while let in a while let
-    let alphanumeric_chars: VecDeque<_> = chars.iter()
-        .take_while(|c| c.is_alphanumeric())
-        .cloned()
-        .collect();
+    while let Some(c2) = chars.pop_front() {
+        if c2.is_alphanumeric() {
+            token_data.push(c2);
+        } else {
+            chars.push_front(c2);
+            break;
+        }
+    }
+    // let alphanumeric_chars: VecDeque<_> = chars.iter()
+    //     .take_while(|c| c.is_alphanumeric())
+    //     .cloned()
+    //     .collect();
 
-    chars.drain(0..alphanumeric_chars.len());
-    token_data.extend(alphanumeric_chars);
+    // chars.drain(0..alphanumeric_chars.len());
+    // token_data.extend(alphanumeric_chars);
 
     // Return the token
     if consts::KEYWORDS.contains(&token_data.as_str()) {
@@ -30,23 +38,31 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 // Tokenize a number
 fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Result<Token, IllegalCharError> {
 
+    // Variables
     let mut dot = false;
     let mut num_str = String::from(c);
 
+    // While there are still characters left
     while let Some(c2) = chars.pop_front() {
+
+        // If it's a dot, mark the dot or throw an error
         if c2 == '.' {
             match dot {
                 true => return Err(IllegalCharError('.')),
                 false => dot = true
             }
         }
+
+        // If it's a valid character then push it, else put it back and break
         if c2.is_numeric() || c2 == '.' {
             num_str.push(c2);
         } else {
+            chars.push_front(c2);
             break;
         }
     }
 
+    // Return the correct type
     if dot {
         let num = num_str.parse::<f32>().unwrap();
         Ok(Token::Float(num))
