@@ -16,12 +16,25 @@ pub enum Token {
 
     // Random data stuff
     Newline,
-    Semicolon,
+
+    // Operators
+    Plus,
+    Minus,
+    Multiply,
+    Divide,
+    Power,
+    Modulus,
 
     // Various types (Whooo a lot)
-    Integer(i32),
-    UInteger(u32),
+    Int(i32),
+    UInt(u32),
+    Long(i64),
+    ULong(u64),
+    LongLong(i128),
+    ULongLong(u128),
     Float(f32),
+    Double(f64),
+
     String(String),
     Boolean(bool)
 }

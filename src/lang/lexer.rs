@@ -28,9 +28,32 @@ fn tokenize_identifier(chars: &mut VecDeque<char>, c: char) -> Token {
 }
 
 // Tokenize a number
-#[allow(unused_variables)]
 fn tokenize_number(chars: &mut VecDeque<char>, c: char) -> Result<Token, IllegalCharError> {
-    Err(IllegalCharError(c))
+
+    let mut dot = false;
+    let mut num_str = String::from(c);
+
+    while let Some(c2) = chars.pop_front() {
+        if c2 == '.' {
+            match dot {
+                true => return Err(IllegalCharError('.')),
+                false => dot = true
+            }
+        }
+        if c2.is_numeric() || c2 == '.' {
+            num_str.push(c2);
+        } else {
+            break;
+        }
+    }
+
+    if dot {
+        let num = num_str.parse::<f32>().unwrap();
+        Ok(Token::Float(num))
+    } else {
+        let num = num_str.parse::<i32>().unwrap();
+        Ok(Token::Int(num))
+    }
 }
 
 // Tokenize a string
@@ -58,6 +81,12 @@ pub fn tokenize(text: String) -> Result<Vec<Token>, impl Display + Debug> {
             // Create the token and push it
             let tok = tokenize_number(&mut chars, c)?;
             tokens.push(tok);
+        
+        // Newlines and semicolons
+        } else if c == ';' || c == '\n' {
+
+            // Create the token and push it
+            tokens.push(Token::Newline)
         
         // Nothing happens on whitespace
         } else if c.is_whitespace() {
